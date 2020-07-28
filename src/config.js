@@ -23,8 +23,8 @@ const config = {
   api_url: process.env.NODE_ENV === 'production'
     ? 'https://libe-labo-2.site/api'
     : `${currentProtocol}//${currentHostname}:3004/api`,
-  stylesheet: 'libe-apps-template.css', // The name of the css file hosted at ${statics_url}/styles/apps/
-  spreadsheet: undefined // The spreadsheet providing data to the app
+  stylesheet: 'libe-apps-template.css',
+  spreadsheet: undefined
 }
 
 module.exports = config

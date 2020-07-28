@@ -6,6 +6,10 @@ import LibeLaboLogo from 'libe-components/lib/blocks/LibeLaboLogo'
 import ArticleMeta from 'libe-components/lib/blocks/ArticleMeta'
 import Paragraph from 'libe-components/lib/text-levels/Paragraph'
 
+const serverUrl = process.env.NODE_ENV === 'production'
+  ? 'https://proxydata.liberation.fr/contributions/le-jeu-du-sud'
+  : 'http://localhost:3004/contributions/le-jeu-du-sud'
+
 export default class App extends Component {
   /* * * * * * * * * * * * * * * * *
    *
@@ -14,11 +18,18 @@ export default class App extends Component {
    * * * * * * * * * * * * * * * * */
   constructor () {
     super()
-    this.c = 'lblb-some-app'
+    this.c = 'le-jeu-du-sud'
     this.state = {
       loading_sheet: true,
       error_sheet: null,
       data_sheet: [],
+
+      mode: 'intro',
+
+      loading_cities: false,
+      error_cities: null,
+      data_cities: [],
+
       keystrokes_history: [],
       konami_mode: false
     }
@@ -26,6 +37,9 @@ export default class App extends Component {
     this.fetchCredentials = this.fetchCredentials.bind(this)
     this.listenToKeyStrokes = this.listenToKeyStrokes.bind(this)
     this.watchKonamiCode = this.watchKonamiCode.bind(this)
+    this.handleActivateGameMode = this.handleActivateGameMode.bind(this)
+    this.handleActivateResultsMode = this.handleActivateResultsMode.bind(this)
+    this.handleActivateIntroMode = this.handleActivateIntroMode.bind(this)
   }
 
   /* * * * * * * * * * * * * * * * *
@@ -35,7 +49,7 @@ export default class App extends Component {
    * * * * * * * * * * * * * * * * */
   componentDidMount () {
     document.addEventListener('keydown', this.listenToKeyStrokes)
-    this.fetchCredentials()
+    // this.fetchCredentials()
     if (this.props.spreadsheet) return this.fetchSheet()
     return this.setState({ loading_sheet: false })
   }
@@ -143,6 +157,68 @@ export default class App extends Component {
 
   /* * * * * * * * * * * * * * * * *
    *
+   * HANDLE ACTIVATE INTRO MODE
+   *
+   * * * * * * * * * * * * * * * * */
+  handleActivateIntroMode (e) {
+    this.setState(curr => ({
+      ...curr,
+      mode: 'intro'
+    }))
+  }
+
+  /* * * * * * * * * * * * * * * * *
+   *
+   * HANDLE ACTIVATE GAME MODE
+   *
+   * * * * * * * * * * * * * * * * */
+  async handleActivateGameMode (e) {
+    try {
+      this.setState(curr => ({
+        ...curr,
+        loading_cities: true,
+        error_cities: null,
+        data_cities: []
+      })) 
+      const request = `${serverUrl}/get-10-cities`
+      const response = await window.fetch(request, {
+        method: 'GET',
+        credentials: 'include'
+      })
+      if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`)
+      const body = await response.json()
+      if (body.err) throw new Error(body.err)
+      this.setState(curr => ({
+        ...curr,
+        mode: 'game',
+        loading_cities: false,
+        error_cities: null,
+        data_cities: body.data
+      })) 
+    } catch (err) {
+      this.setState(curr => ({
+        ...curr,
+        loading_cities: false,
+        error_cities: err.message,
+        data_cities: []
+      }))
+    }
+  }
+
+  /* * * * * * * * * * * * * * * * *
+   *
+   * HANDLE ACTIVATE RESULTS MODE
+   *
+   * * * * * * * * * * * * * * * * */
+  handleActivateResultsMode (e) {
+    this.setState(curr => ({
+      ...curr,
+      mode: 'results'
+    }))
+  }
+
+  /* * * * * * * * * * * * * * * * *
+   *
    * RENDER
    *
    * * * * * * * * * * * * * * * * */
@@ -153,9 +229,14 @@ export default class App extends Component {
     const classes = [c]
     if (state.loading_sheet) classes.push(`${c}_loading`)
     if (state.error_sheet) classes.push(`${c}_error`)
+    if (state.loading_cities) classes.push(`${c}_loading`)
+    if (state.error_cities) classes.push(`${c}_error`)
+    if (state.mode === 'intro') classes.push(`${c}_intro-mode`)
+    if (state.mode === 'game') classes.push(`${c}_game-mode`)
+    if (state.mode === 'results') classes.push(`${c}_results-mode`)
 
     /* Load & errors */
-    if (state.loading_sheet) {
+    if (state.loading_sheet || state.loading_cities) {
       return <div className={classes.join(' ')}>
         <div className='lblb-default-apps-loader'>
           <Loader />
@@ -168,13 +249,29 @@ export default class App extends Component {
           <LoadingError />
         </div>
       </div>
+    } else if (state.error_cities) {
+      return <div className={classes.join(' ')}>
+        <div className='lblb-default-apps-error'>
+          <Paragraph>{state.error_cities}</Paragraph>
+          <LoadingError />
+        </div>
+      </div>
     }
 
     /* Display component */
     return <div className={classes.join(' ')}>
-      App is ready.<br />
-      - fill spreadsheet field in config.js<br />
-      - display it's content via state.data_sheet
+      <div className='intro-panel'>
+        <p>Intro</p>
+        <button onClick={this.handleActivateGameMode}>Next</button>
+      </div>
+      <div className='game-panel'>
+        {state.data_cities.map(city => <p key={city.name}>{city.name}</p>)}
+        <button onClick={this.handleActivateResultsMode}>Next</button>
+      </div>
+      <div className='results-panel'>
+        <p>Results</p>
+        <button onClick={this.handleActivateGameMode}>Play again</button>
+      </div>
       <div className='lblb-default-apps-footer'>
         <ShareArticle short iconsOnly tweet={props.meta.tweet} url={props.meta.url} />
         <ArticleMeta

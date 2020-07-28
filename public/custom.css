@@ -1,0 +1,25 @@
+.lblb-default-apps-error {
+  top: 80px;
+  flex-direction: column;
+}
+
+.intro-panel,
+.game-panel,
+.results-panel {
+  display: none;
+}
+
+.le-jeu-du-sud_intro-mode
+  .intro-panel {
+    display: block;
+}
+
+.le-jeu-du-sud_game-mode
+  .game-panel {
+    display: block;
+}
+
+.le-jeu-du-sud_results-mode
+  .results-panel {
+    display: block;
+}
