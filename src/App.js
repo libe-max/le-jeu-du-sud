@@ -29,6 +29,7 @@ export default class App extends Component {
       loading_cities: false,
       error_cities: null,
       data_cities: [],
+      current_city_nb: 0,
 
       keystrokes_history: [],
       konami_mode: false
@@ -38,8 +39,7 @@ export default class App extends Component {
     this.listenToKeyStrokes = this.listenToKeyStrokes.bind(this)
     this.watchKonamiCode = this.watchKonamiCode.bind(this)
     this.handleActivateGameMode = this.handleActivateGameMode.bind(this)
-    this.handleActivateResultsMode = this.handleActivateResultsMode.bind(this)
-    this.handleActivateIntroMode = this.handleActivateIntroMode.bind(this)
+    this.handleVote = this.handleVote.bind(this)
   }
 
   /* * * * * * * * * * * * * * * * *
@@ -157,18 +157,6 @@ export default class App extends Component {
 
   /* * * * * * * * * * * * * * * * *
    *
-   * HANDLE ACTIVATE INTRO MODE
-   *
-   * * * * * * * * * * * * * * * * */
-  handleActivateIntroMode (e) {
-    this.setState(curr => ({
-      ...curr,
-      mode: 'intro'
-    }))
-  }
-
-  /* * * * * * * * * * * * * * * * *
-   *
    * HANDLE ACTIVATE GAME MODE
    *
    * * * * * * * * * * * * * * * * */
@@ -188,6 +176,7 @@ export default class App extends Component {
       if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`)
       const body = await response.json()
       if (body.err) throw new Error(body.err)
+      console.log(body)
       this.setState(curr => ({
         ...curr,
         mode: 'game',
@@ -207,14 +196,11 @@ export default class App extends Component {
 
   /* * * * * * * * * * * * * * * * *
    *
-   * HANDLE ACTIVATE RESULTS MODE
+   * HANDLE VOTE
    *
    * * * * * * * * * * * * * * * * */
-  handleActivateResultsMode (e) {
-    this.setState(curr => ({
-      ...curr,
-      mode: 'results'
-    }))
+  handleVote (cityName, voteValue) {
+    console.log(cityName, voteValue)
   }
 
   /* * * * * * * * * * * * * * * * *
@@ -258,20 +244,35 @@ export default class App extends Component {
       </div>
     }
 
+    /* Logic */
+    const currentCityNb = state.current_city_nb
+    const currentCity = state.data_cities.length ? state.data_cities[currentCityNb] : {}
+    const currentCityName = currentCity.name
+
     /* Display component */
     return <div className={classes.join(' ')}>
+      {/* Intro */}
       <div className='intro-panel'>
         <p>Intro</p>
         <button onClick={this.handleActivateGameMode}>Next</button>
       </div>
+
+      {/* Game */}
       <div className='game-panel'>
-        {state.data_cities.map(city => <p key={city.name}>{city.name}</p>)}
-        <button onClick={this.handleActivateResultsMode}>Next</button>
+        <p>{`${currentCityNb + 1}/10`}</p>
+        <p>{`${currentCityName}`}</p>
+        <button onClick={e => this.handleVote(currentCityName, 'north')}>Au nord</button>
+        <button onClick={e => this.handleVote(currentCityName, 'south')}>Au sud</button>
+        <button onClick={e => this.handleVote(currentCityName, 'idk')}>Jsp</button>
       </div>
+
+      {/* Results */}
       <div className='results-panel'>
         <p>Results</p>
         <button onClick={this.handleActivateGameMode}>Play again</button>
       </div>
+
+      {/* Footer */}
       <div className='lblb-default-apps-footer'>
         <ShareArticle short iconsOnly tweet={props.meta.tweet} url={props.meta.url} />
         <ArticleMeta
