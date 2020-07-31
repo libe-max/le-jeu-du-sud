@@ -4,6 +4,8 @@ import LoadingError from 'libe-components/lib/blocks/LoadingError'
 import ShareArticle from 'libe-components/lib/blocks/ShareArticle'
 import LibeLaboLogo from 'libe-components/lib/blocks/LibeLaboLogo'
 import ArticleMeta from 'libe-components/lib/blocks/ArticleMeta'
+import PageTitle from 'libe-components/lib/text-levels/PageTitle'
+import Overhead from 'libe-components/lib/text-levels/Overhead'
 import Paragraph from 'libe-components/lib/text-levels/Paragraph'
 import Gauge from './components/Gauge'
 import FranceMap from './components/FranceMap'
@@ -26,7 +28,7 @@ export default class App extends Component {
       error_sheet: null,
       data_sheet: [],
 
-      mode: 'results',
+      mode: 'intro',
 
       loading_cities: false,
       error_cities: null,
@@ -285,6 +287,8 @@ export default class App extends Component {
     if (state.mode === 'game') classes.push(`${c}_game-mode`)
     if (state.mode === 'results') classes.push(`${c}_results-mode`)
 
+    console.log(classes)
+
     /* Load & errors */
     if (state.loading_sheet || state.loading_cities || state.loading_results) {
       return <div className={classes.join(' ')}>
@@ -367,17 +371,47 @@ export default class App extends Component {
     return <div className={classes.join(' ')}>
       {/* Intro */}
       <div className='intro-panel'>
-        <p>Intro</p>
-        <button onClick={this.handleActivateGameMode}>Next</button>
+        <img src='./logo.svg' />
+        <PageTitle small>On&nbsp;dirait le&nbsp;sud</PageTitle>
+        <Overhead>Calculateur de sud ressenti</Overhead>
+        <Paragraph literary>
+          Limoges, au nord ou au sud&nbsp;? Maubeuge la méridionale ou l'australe&nbsp;?<br /><br />
+          Il y a la réalité géographique et puis le ressenti.<br /><br />
+          Nous avons sélectionné dix villes parmi les plus peuplées de France. Placez-les au nord ou au sud selon l'image que vous en avez pour nous permettre de mesurer le décalage entre les faits et votre perception
+        </Paragraph>
+        <button onClick={this.handleActivateGameMode}>
+          <Overhead big>Jouer</Overhead>
+        </button>
       </div>
 
       {/* Game */}
       <div className='game-panel'>
-        <p>{`${currentCityNb + 1}/10`}</p>
-        <p>{`${currentCityName}`}</p>
-        <button onClick={e => this.handleVote(currentCityName, 'north')}>Au nord</button>
-        <button onClick={e => this.handleVote(currentCityName, 'south')}>Au sud</button>
-        <button onClick={e => this.handleVote(currentCityName, 'idk')}>Jsp</button>
+        <div className='game-panel__counter'>
+          <Paragraph big>{`${currentCityNb + 1}/10`}</Paragraph>
+        </div>
+        <div className='game-panel__city-name'>
+          <Overhead>{`${currentCityName}`}</Overhead>
+        </div>
+        <div className='game-panel__buttons'>
+          <button
+            className='game-panel__north-button'
+            onClick={e => this.handleVote(currentCityName, 'north')}>
+            <Overhead small>Au nord</Overhead>
+            <Paragraph>aucun doute là dessus</Paragraph>
+          </button>
+          <button
+            className='game-panel__south-button'
+            onClick={e => this.handleVote(currentCityName, 'south')}>
+            <Overhead small>Au sud</Overhead>
+            <Paragraph>c'est sûr</Paragraph>
+          </button>
+          <button
+            className='game-panel__idk-button'
+            onClick={e => this.handleVote(currentCityName, 'idk')}>
+            <Paragraph>Alors là franchement</Paragraph>
+            <Overhead small>aucune idée</Overhead>
+          </button>
+        </div>
       </div>
 
       {/* Results */}
@@ -394,8 +428,9 @@ export default class App extends Component {
       <div className='lblb-default-apps-footer'>
         <ShareArticle short iconsOnly tweet={props.meta.tweet} url={props.meta.url} />
         <ArticleMeta
-          publishedOn='01/01/2020 12:00' authors={[
-            { name: 'Libé Labo', role: 'Production', link: 'https://www.liberation.fr/libe-labo-data-nouveaux-formats,100538' }
+          authors={[
+            { name: 'Clara Dealberto', role: 'Production', link: 'https://www.liberation.fr/auteur/18438-clara-dealberto' },
+            { name: 'Maxime Fabas', role: 'Production', link: 'https://www.liberation.fr/auteur/19310-maxime-fabas' }
           ]}
         />
         <LibeLaboLogo target='blank' />

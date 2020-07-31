@@ -1,6 +1,33 @@
-.lblb-default-apps-error {
-  top: 80px;
+/* * * * * * * * * * * * * * * * * * * * * *
+ *
+ * WRAPPERS
+ *
+ * * * * * * * * * * * * * * * * * * * * * */
+body {
+  background-image: url('./gradient.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+#libe-labo-app-wrapper {
+  display: flex;
+  align-items: center;
   flex-direction: column;
+}
+
+.le-jeu-du-sud {
+  width: calc(100% - 2rem);
+  margin: 1rem;
+  max-width: 63rem;
+  background: #FFFFFF;
+}
+
+@media screen and (max-width: 63rem) {
+  .le-jeu-du-sud {
+    width: calc(100% - 1rem);
+    margin: .5rem;
+  }
 }
 
 .intro-panel,
@@ -11,15 +38,193 @@
 
 .le-jeu-du-sud_intro-mode
   .intro-panel {
-    display: block;
+    display: flex;
 }
 
 .le-jeu-du-sud_game-mode
   .game-panel {
-    display: block;
+    display: flex;
 }
 
 .le-jeu-du-sud_results-mode
   .results-panel {
-    display: block;
+    display: flex;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * *
+ *
+ * INTRO PANEL
+ *
+ * * * * * * * * * * * * * * * * * * * * * */
+.intro-panel {
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.intro-panel > img {
+  max-width: 100%;
+  margin-bottom: 2rem;
+  width: 18rem;
+  height: auto;
+}
+
+.intro-panel > .lblb-page-title h1 {
+  font-family: 'Libe-Sans-Semicondensed';
+  color: #FD008C;
+  text-align: center;
+}
+
+.intro-panel > .lblb-overhead span {
+  font-family: 'Libe-Sans-Semicondensed';
+  text-transform: none;
+  color: #212121;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.intro-panel > .lblb-paragraph {
+  text-align: center;
+  padding: .5rem;
+  max-width: 40rem;
+}
+
+.intro-panel > button {
+  position: fixed;
+  bottom: 2rem;
+  padding: .5rem 1rem;
+  border: none;
+  background: #FD008C;
+  border-radius: .25rem;
+  box-shadow: 0 0 .5rem 0 rgba(33, 33, 33, .2);
+  cursor: pointer;
+}
+
+.intro-panel > button .lblb-overhead {
+  font-family: 'Libe-Sans-Semicondensed';
+  font-weight: 800;
+  letter-spacing: .05rem;
+  color: #FFFFFF;
+}
+
+@media screen and (max-width: 63rem) {
+  .intro-panel {
+    padding: 1rem .5rem;
+  }
+
+  .intro-panel > img {
+    width: 14rem;
+    margin-bottom: 1rem;
+  }
+
+  .intro-panel > .lblb-overhead span {
+    margin-bottom: 1rem;
+  }
+}
+
+@media screen and (max-width: 40rem) {
+  .intro-panel > img {
+    width: 10rem;
+  }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * *
+ *
+ * GAME PANEL
+ *
+ * * * * * * * * * * * * * * * * * * * * * */
+.game-panel {
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.game-panel__counter .lblb-paragraph {
+  font-family: 'Libe-Typewriter';
+  font-weight: 400;
+  margin-bottom: .5rem;
+}
+
+.game-panel__city-name .lblb-overhead span {
+  font-family: 'Libe-Sans-Semicondensed';
+  text-transform: none;
+  color: #212121;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.game-panel__buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.game-panel__north-button,
+.game-panel__south-button,
+.game-panel__idk-button {
+  padding: .5rem 1rem;
+  border: none;
+  border-radius: .25rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.game-panel__north-button {
+  background: #009FE3;
+}
+
+.game-panel__south-button {
+  background: #FFED00;
+}
+
+.game-panel__idk-button {
+  background: #FFFFFF;
+  border: 1px solid #CCCCCC;
+}
+
+.game-panel__north-button .lblb-overhead span,
+.game-panel__south-button .lblb-overhead span,
+.game-panel__idk-button .lblb-overhead span {
+  
+}
+
+.game-panel__north-button .lblb-overhead span,
+.game-panel__north-button .lblb-paragraph {
+  color: #FFFFFF;
+}
+
+@media screen and (max-width: 63rem) {
+  .game-panel__city-name .lblb-overhead span {
+    margin-bottom: 1rem;
+  }
+
+}
+
+@media screen and (max-width: 40rem) {
+  
+}
+
+/* * * * * * * * * * * * * * * * * * * * * *
+ *
+ * DEFAULT FOOTER & ERRORS
+ *
+ * * * * * * * * * * * * * * * * * * * * * */
+.lblb-default-apps-footer {
+  margin-bottom: 6rem;
+}
+
+.lblb-default-apps-error {
+  top: 80px;
+  flex-direction: column;
+}
+
+@media screen and (max-width: 63rem) {
+  .lblb-default-apps-footer {
+    margin-bottom: 5rem;
+  }  
+}
+
+@media screen and (max-width: 40rem) {
+  .lblb-default-apps-footer {
+    margin-bottom: 4rem;
+  }  
 }
