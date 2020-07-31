@@ -1,5 +1,15 @@
 /* * * * * * * * * * * * * * * * * * * * * *
  *
+ * VARIABLES
+ *
+ * * * * * * * * * * * * * * * * * * * * * */
+:root {
+  --dsk-tiny-margin-bottom: calc((40px + (100vh - 568px) / 6) / 1.8);
+  --dsk-reg-margin-bottom: calc(40px + (100vh - 568px) / 6);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * *
+ *
  * WRAPPERS
  *
  * * * * * * * * * * * * * * * * * * * * * */
@@ -17,17 +27,9 @@ body {
 }
 
 .le-jeu-du-sud {
-  width: calc(100% - 2rem);
-  margin: 1rem;
-  max-width: 63rem;
+  width: calc(100% - 4rem);
+  margin: 2rem;
   background: #FFFFFF;
-}
-
-@media screen and (max-width: 63rem) {
-  .le-jeu-du-sud {
-    width: calc(100% - 1rem);
-    margin: .5rem;
-  }
 }
 
 .intro-panel,
@@ -36,19 +38,23 @@ body {
   display: none;
 }
 
-.le-jeu-du-sud_intro-mode
-  .intro-panel {
+.le-jeu-du-sud_intro-mode .intro-panel {
     display: flex;
 }
 
-.le-jeu-du-sud_game-mode
-  .game-panel {
+.le-jeu-du-sud_game-mode .game-panel {
     display: flex;
 }
 
-.le-jeu-du-sud_results-mode
-  .results-panel {
+.le-jeu-du-sud_results-mode .results-panel {
     display: flex;
+}
+
+@media screen and (max-width: 63rem) {
+  .le-jeu-du-sud {
+    width: calc(100% - 1rem);
+    margin: .5rem;
+  }
 }
 
 /* * * * * * * * * * * * * * * * * * * * * *
@@ -65,6 +71,7 @@ body {
 .intro-panel > img {
   max-width: 100%;
   margin-bottom: 2rem;
+  margin-top: calc(var(--dsk-reg-margin-bottom) / 2);
   width: 18rem;
   height: auto;
 }
@@ -91,7 +98,7 @@ body {
 
 .intro-panel > button {
   position: fixed;
-  bottom: 2rem;
+  bottom: var(--dsk-reg-margin-bottom);
   padding: .5rem 1rem;
   border: none;
   background: #FD008C;
@@ -137,12 +144,14 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 1rem;
+  padding-bottom: 0rem;
 }
 
 .game-panel__counter .lblb-paragraph {
   font-family: 'Libe-Typewriter';
   font-weight: 400;
-  margin-bottom: .5rem;
+  margin-top: var(--dsk-tiny-margin-bottom);
+  margin-bottom: var(--dsk-reg-margin-bottom);
 }
 
 .game-panel__city-name .lblb-overhead span {
@@ -150,12 +159,15 @@ body {
   text-transform: none;
   color: #212121;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-top: 0;
+  margin-bottom: var(--dsk-reg-margin-bottom);
 }
 
 .game-panel__buttons {
   display: flex;
   flex-direction: column;
+  margin-top: 0rem;
+  margin-bottom: var(--dsk-reg-margin-bottom);
 }
 
 .game-panel__north-button,
@@ -179,12 +191,14 @@ body {
 .game-panel__idk-button {
   background: #FFFFFF;
   border: 1px solid #CCCCCC;
+  margin-bottom: 0rem;
 }
 
 .game-panel__north-button .lblb-overhead span,
 .game-panel__south-button .lblb-overhead span,
 .game-panel__idk-button .lblb-overhead span {
-  
+  font-family: 'Libe-Sans-Semicondensed';
+  text-transform: none;
 }
 
 .game-panel__north-button .lblb-overhead span,
@@ -192,15 +206,130 @@ body {
   color: #FFFFFF;
 }
 
-@media screen and (max-width: 63rem) {
-  .game-panel__city-name .lblb-overhead span {
-    margin-bottom: 1rem;
-  }
+/* * * * * * * * * * * * * * * * * * * * * *
+ *
+ * RESULTS PANEL
+ *
+ * * * * * * * * * * * * * * * * * * * * * */
+.results-panel__jauge,
+.results-panel__map {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.results-panel__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.results-panel__head > .lblb-overhead span {
+  font-family: 'Libe-Sans-Semicondensed';
+  text-transform: none;
+  color: #212121;
+  text-align: center;
+  font-weight: 400;
+  font-size: 2.2rem;
+}
+
+.results-panel__head > .lblb-overhead:nth-child(1) span {
+  font-weight: 800;
+  margin-top: calc(var(--dsk-reg-margin-bottom) / 2);
+  margin-bottom: .25rem;
+  font-size: 2.5rem;
+}
+
+.results-panel__head > .lblb-paragraph {
+  font-family: 'Libe-Sans-Semicondensed';
+  text-transform: none;
+  color: #212121;
+  text-align: center;
+  font-weight: 400;
+  margin-bottom: var(--dsk-reg-margin-bottom);
+  text-align: center;
+}
+
+.results-panel__text {
+  max-width: 40rem;
+  text-align: center;
+}
+
+.results-panel__jauge {
+  display: flex;
+}
+
+.results-panel__map {
+  display: none;
+}
+
+.le-jeu-du-sud_map-results-mode .results-panel__jauge {
+  display: none;
+}
+
+.le-jeu-du-sud_map-results-mode .results-panel__map {
+  display: flex;
+}
+
+.results-panel__primary-button {
 
 }
 
-@media screen and (max-width: 40rem) {
-  
+.results-panel__secondary-button {
+
+}
+
+/* * * * * * * * * * * * * * * * * * * * * *
+ *
+ * JAUGE
+ *
+ * * * * * * * * * * * * * * * * * * * * * */
+.jauge {
+  display: flex;
+  max-width: calc(100% - 2rem);
+  width: 20vw;
+  height: calc(100vh - 2rem);
+  justify-content: 'space-between'
+}
+
+.jauge__latitude-bar {
+  width: .75rem;
+  height: 100%;
+  background-image: url(./jauge-latitude.svg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.jauge__latitude-point {
+  position: absolute;
+  width: .75rem;
+  height: .75rem;
+  right: 0;
+  border-radius: .75rem;
+  background: red;
+}
+
+.jauge__votes-bar {
+  width: 1.5rem;
+  height: 100%;
+  background-image: url(./jauge-votes.svg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.jauge__votes-point {
+  position: absolute;
+  width: .75rem;
+  height: .75rem;
+  transform: translateX(-50%);
+  left: 50%;
+  border-radius: .75rem;
+  background: blue;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * *
@@ -209,22 +338,31 @@ body {
  *
  * * * * * * * * * * * * * * * * * * * * * */
 .lblb-default-apps-footer {
-  margin-bottom: 6rem;
+  text-align: center;
+  margin-bottom: 0rem;
+  margin-top: 0rem;
+}
+
+.lblb-default-apps-footer .lblb-share-article {
+  margin-top: 0;
+  margin-bottom: var(--dsk-reg-margin-bottom);
+}
+
+.lblb-default-apps-footer .lblb-paragraph {
+  margin-top: 0;
+  margin-bottom: var(--dsk-reg-margin-bottom);
+}
+
+.lblb-default-apps-footer .lblb-paragraph span {
+  color: #777777;
+}
+
+.lblb-default-apps-footer .lblb-libe-labo-logo {
+  margin-top: 0;
+  margin-bottom: calc(2.5 * var(--dsk-reg-margin-bottom));
 }
 
 .lblb-default-apps-error {
   top: 80px;
   flex-direction: column;
-}
-
-@media screen and (max-width: 63rem) {
-  .lblb-default-apps-footer {
-    margin-bottom: 5rem;
-  }  
-}
-
-@media screen and (max-width: 40rem) {
-  .lblb-default-apps-footer {
-    margin-bottom: 4rem;
-  }  
 }

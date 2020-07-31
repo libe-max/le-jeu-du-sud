@@ -11,33 +11,11 @@ class Gauge extends Component {
     const mapEastBound = 9.560000
     const mapSouthBound = 41.364524
     const mapNorthBound = 51.088957
-    return <div style={{
-      display: 'flex',
-      width: 'calc(100vw - 2rem)',
-      maxWidth: '63rem',
-      height: '140rem',
-      justifyContent: 'space-between'
-    }}>
-      <div style={{
-        width: '2rem',
-        height: '100%',
-        backgroundImage: 'url(./jauge-latitude.svg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        position: 'relative'
-      }}>{
+    return <div className='jauge'>
+      <div className='jauge__latitude-bar'>{
         data.map(city => {
           const vPos = 100 - (100 * (city.latitude - mapSouthBound) / (mapNorthBound - mapSouthBound))
-          return <div style={{
-            position: 'absolute',
-            width: '.5rem',
-            height: '.5rem',
-            borderRadius: '.5rem',
-            background: 'red',
-            top: `${vPos}%`
-
-          }} />
+          return <div className='jauge__latitude-point' style={{ top: `${vPos}%` }} />
         })
       }</div>
       
@@ -49,15 +27,13 @@ class Gauge extends Component {
         Lines
       </div>
 
-      <div style={{
-        width: '2rem',
-        height: '100%',
-        backgroundImage: 'url(./jauge-votes.svg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>{
-
+      <div className='jauge__votes-bar'>{
+        data.map(city => {
+          const vLatitudePos = 100 - (100 * (city.latitude - mapSouthBound) / (mapNorthBound - mapSouthBound))
+          const voteRatio = 100 * city.south / (city.north + city.south)
+          console.log(city)
+          return <div className='jauge__votes-point' style={{ top: `${voteRatio}%` }} />
+        })
       }</div>
     </div>
   }

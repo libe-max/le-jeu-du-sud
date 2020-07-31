@@ -41,6 +41,8 @@ export default class App extends Component {
       error_results: null,
       data_results: [],
 
+      data_votes_cnt: 0,
+
       keystrokes_history: [],
       konami_mode: false
     }
@@ -244,6 +246,7 @@ export default class App extends Component {
         loading_results: false,
         error_results: null,
         data_results: [...body.data],
+        data_votes_cnt: body.votes_cnt,
         mode: 'results'
       }))
     } catch (err) {
@@ -286,8 +289,7 @@ export default class App extends Component {
     if (state.mode === 'intro') classes.push(`${c}_intro-mode`)
     if (state.mode === 'game') classes.push(`${c}_game-mode`)
     if (state.mode === 'results') classes.push(`${c}_results-mode`)
-
-    console.log(classes)
+    if (state.results_mode === 'map') classes.push(`${c}_map-results-mode`)
 
     /* Load & errors */
     if (state.loading_sheet || state.loading_cities || state.loading_results) {
@@ -390,7 +392,7 @@ export default class App extends Component {
           <Paragraph big>{`${currentCityNb + 1}/10`}</Paragraph>
         </div>
         <div className='game-panel__city-name'>
-          <Overhead>{`${currentCityName}`}</Overhead>
+          <Overhead big>{`${currentCityName}`}</Overhead>
         </div>
         <div className='game-panel__buttons'>
           <button
@@ -416,23 +418,65 @@ export default class App extends Component {
 
       {/* Results */}
       <div className='results-panel'>
-        <p>Results</p>
-        <button onClick={this.handleActivateResultsGaugeMode}>Voir la jauge</button>
-        <button onClick={this.handleActivateResultsMapMode}>Voir la carte</button>
-        <Gauge data={fakeData/*state.data_results*/} />
-        <FranceMap data={fakeData/*state.data_results*/} />
-        <button onClick={this.handleActivateGameMode}>Play again</button>
+        <div className='results-panel__jauge'>
+          <div className='results-panel__text'>
+            <div className='results-panel__head'>
+              <Overhead big>Sud ressenti</Overhead>
+              <Overhead big>en pourcentage</Overhead>
+            </div>
+            <div className='results-panel__text'>
+              <Paragraph literary>
+              {`Votre vote a été ajouté aux ${state.data_votes_cnt} votes précédents pour calculer le taux de Sud ressenti de la France (axe central) : si tous les votants ont placé une ville au Nord, son pourcentage de Sud ressenti est de 0%.`}
+              <br /><br />
+              {`L’axe de gauche représente la latitude réelle de la ville : plus le lien qui relie une ville à sa latitude réelle est incliné, plus le pourcentage de Sud ressenti diffère de la réalité.`}
+              </Paragraph>
+            </div>
+          </div>
+          <Gauge data={/*fakeData*/state.data_results} />
+          <button
+            className='results-panel__primary-button'
+            onClick={this.handleActivateResultsMapMode}>
+            Voir les résultats sur une carte
+          </button>
+          <button
+            className='results-panel__secondary-button'
+            onClick={this.handleActivateGameMode}>
+            Rejouer
+          </button>
+        </div>
+
+        <div className='results-panel__map'>
+          <div className='results-panel__text'>
+            <div className='results-panel__head'>
+              <Overhead big>Sud ressenti</Overhead>
+              <Overhead big>en pourcentage</Overhead>
+            </div>
+            <div className='results-panel__text'>
+              <Paragraph literary>
+              {`Les cercles sont coloriés par rapport au taux de Sud ressenti présenté précédemment.`}
+              <br /><br />
+              {`Les couleurs du fond de carte correspondent à la latitude réelle des zones coloriées : si un cercle gris est placé dans la zone rose, c’est que les lecteurs l’imaginent au Nord alors qu’il est au Sud, et vice versa.`}
+              </Paragraph>
+              <FranceMap data={/*fakeData*/state.data_results} />
+              <button
+                className='results-panel__primary-button'
+                onClick={this.handleActivateGameMode}>
+                Rejouer
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Footer */}
       <div className='lblb-default-apps-footer'>
         <ShareArticle short iconsOnly tweet={props.meta.tweet} url={props.meta.url} />
-        <ArticleMeta
-          authors={[
-            { name: 'Clara Dealberto', role: 'Production', link: 'https://www.liberation.fr/auteur/18438-clara-dealberto' },
-            { name: 'Maxime Fabas', role: 'Production', link: 'https://www.liberation.fr/auteur/19310-maxime-fabas' }
-          ]}
-        />
+        <Paragraph small>
+          <span>Production : </span>
+          <a href='https://www.liberation.fr/auteur/18438-clara-dealberto'>Clara&nbsp;Dealberto</a>
+          <span> et&nbsp;</span>
+          <a href='https://www.liberation.fr/auteur/19310-maxime-fabas'>Maxime&nbsp;Fabas</a>
+        </Paragraph>
         <LibeLaboLogo target='blank' />
       </div>
     </div>
