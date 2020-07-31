@@ -5,6 +5,8 @@ import ShareArticle from 'libe-components/lib/blocks/ShareArticle'
 import LibeLaboLogo from 'libe-components/lib/blocks/LibeLaboLogo'
 import ArticleMeta from 'libe-components/lib/blocks/ArticleMeta'
 import Paragraph from 'libe-components/lib/text-levels/Paragraph'
+import Gauge from './components/Gauge'
+import FranceMap from './components/FranceMap'
 
 const serverUrl = process.env.NODE_ENV === 'production'
   ? 'https://proxydata.liberation.fr/contributions/le-jeu-du-sud'
@@ -24,12 +26,18 @@ export default class App extends Component {
       error_sheet: null,
       data_sheet: [],
 
-      mode: 'intro',
+      mode: 'results',
 
       loading_cities: false,
       error_cities: null,
       data_cities: [],
       current_city_nb: 0,
+
+      pending_votes: [],
+
+      loading_results: false,
+      error_results: null,
+      data_results: [],
 
       keystrokes_history: [],
       konami_mode: false
@@ -40,6 +48,8 @@ export default class App extends Component {
     this.watchKonamiCode = this.watchKonamiCode.bind(this)
     this.handleActivateGameMode = this.handleActivateGameMode.bind(this)
     this.handleVote = this.handleVote.bind(this)
+    this.handleActivateResultsGaugeMode = this.handleActivateResultsGaugeMode.bind(this)
+    this.handleActivateResultsMapMode = this.handleActivateResultsMapMode.bind(this)
   }
 
   /* * * * * * * * * * * * * * * * *
@@ -176,7 +186,6 @@ export default class App extends Component {
       if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`)
       const body = await response.json()
       if (body.err) throw new Error(body.err)
-      console.log(body)
       this.setState(curr => ({
         ...curr,
         mode: 'game',
@@ -199,8 +208,65 @@ export default class App extends Component {
    * HANDLE VOTE
    *
    * * * * * * * * * * * * * * * * */
-  handleVote (cityName, voteValue) {
-    console.log(cityName, voteValue)
+  async handleVote (cityName, voteValue) {
+    if (!cityName || !voteValue) return
+
+    // If last city is not reached, push vote and go on
+    if (this.state.current_city_nb < 9) return this.setState(current => ({
+      ...current,
+      pending_votes: [...current.pending_votes, { name: cityName, vote: voteValue }],
+      current_city_nb: current.current_city_nb < 9 ? current.current_city_nb + 1 : + 0
+    }))
+
+    // If last city, submit vote, wait for results and go to results page
+    try {
+      const votes = [...this.state.pending_votes, { name: cityName, vote: voteValue }]
+      this.setState(curr => ({
+        ...curr,
+        loading_results: true,
+        error_results: null,
+        data_results: []
+      }))
+      const request = `${serverUrl}/submit-votes`
+      const response = await window.fetch(request, {
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify(votes),
+        headers: { 'Content-Type': 'application/json' }
+      })
+      if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`)
+      const body = await response.json()
+      if (body.err) throw new Error(body.err)
+      this.setState(curr => ({
+        ...curr,
+        loading_results: false,
+        error_results: null,
+        data_results: [...body.data],
+        mode: 'results'
+      }))
+    } catch (err) {
+      this.setState(curr => ({
+        ...curr,
+        loading_results: false,
+        error_results: err.message,
+        data_results: [],
+        mode: 'results'
+      }))
+    }
+  }
+
+  handleActivateResultsGaugeMode (e) {
+    this.setState(current => ({
+      ...current,
+      results_mode: 'gauge'
+    }))
+  }
+
+  handleActivateResultsMapMode (e) {
+    this.setState(current => ({
+      ...current,
+      results_mode: 'map'
+    }))
   }
 
   /* * * * * * * * * * * * * * * * *
@@ -213,16 +279,14 @@ export default class App extends Component {
 
     /* Assign classes */
     const classes = [c]
-    if (state.loading_sheet) classes.push(`${c}_loading`)
-    if (state.error_sheet) classes.push(`${c}_error`)
-    if (state.loading_cities) classes.push(`${c}_loading`)
-    if (state.error_cities) classes.push(`${c}_error`)
+    if (state.loading_sheet || state.loading_cities || state.loading_results) classes.push(`${c}_loading`)
+    if (state.error_sheet || state.error_cities || state.error_results) classes.push(`${c}_error`)
     if (state.mode === 'intro') classes.push(`${c}_intro-mode`)
     if (state.mode === 'game') classes.push(`${c}_game-mode`)
     if (state.mode === 'results') classes.push(`${c}_results-mode`)
 
     /* Load & errors */
-    if (state.loading_sheet || state.loading_cities) {
+    if (state.loading_sheet || state.loading_cities || state.loading_results) {
       return <div className={classes.join(' ')}>
         <div className='lblb-default-apps-loader'>
           <Loader />
@@ -242,12 +306,62 @@ export default class App extends Component {
           <LoadingError />
         </div>
       </div>
+    } else if (state.error_results) {
+      return <div className={classes.join(' ')}>
+        <div className='lblb-default-apps-error'>
+          <Paragraph>{state.error_results}</Paragraph>
+          <LoadingError />
+        </div>
+      </div>
     }
 
     /* Logic */
     const currentCityNb = state.current_city_nb
     const currentCity = state.data_cities.length ? state.data_cities[currentCityNb] : {}
     const currentCityName = currentCity.name
+
+    const fakeData = [
+      { "name": "Paris", "latitude": 48.856614, "longitude": 2.3522219, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Marseille", "latitude": 43.296482, "longitude": 5.36978, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Lyon", "latitude": 45.764043, "longitude": 4.835659, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Toulouse", "latitude": 43.604652, "longitude": 1.444209, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Nice", "latitude": 43.7101728, "longitude":  7.261953200000001, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Nantes", "latitude": 47.218371, "longitude": -1.553621, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Montpellier", "latitude": 43.610769, "longitude": 3.876716, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Strasbourg", "latitude": 48.5734053, "longitude":  7.752111299999999, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Bordeaux", "latitude": 44.837789, "longitude": -0.57918, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Lille", "latitude": 50.62925, "longitude":  3.057256, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Rennes", "latitude": 48.117266, "longitude": -1.6777926, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Reims", "latitude": 49.258329, "longitude": 4.031696, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Saint-Étienne", "latitude": 45.439695, "longitude": 4.3871779, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Toulon", "latitude": 43.124228, "longitude": 5.928, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Le Havre", "latitude": 49.49437, "longitude":  0.107929, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Grenoble", "latitude": 45.188529, "longitude": 5.724524, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Dijon", "latitude": 47.322047, "longitude": 5.04148, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Angers", "latitude": 47.47116159999999, "longitude": -0.5518257, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Nîmes", "latitude": 43.836699, "longitude": 4.360054, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Saint-Denis", "latitude": 48.936181, "longitude": 2.357443, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Villeurbanne", "latitude": 45.771944, "longitude": 4.8901709, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Clermont-Ferrand", "latitude": 45.77722199999999, "longitude": 3.087025, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Le Mans", "latitude": 48.00611000000001, "longitude": 0.199556, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Aix-en-Provence", "latitude": 43.529742, "longitude": 5.447426999999999, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Brest", "latitude": 48.390394, "longitude": -4.486076, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Tours", "latitude": 47.394144, "longitude": 0.68484, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Amiens", "latitude": 49.894067, "longitude": 2.295753, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Limoges", "latitude": 45.83361900000001, "longitude": 1.261105, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Annecy", "latitude": 45.899247, "longitude": 6.129384, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Perpignan", "latitude": 42.6886591, "longitude":  2.8948332, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Boulogne-Billancourt", "latitude": 48.8396952, "longitude":  2.2399123, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Orléans", "latitude": 47.902964, "longitude": 1.909251, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Metz", "latitude": 49.1193089, "longitude":  6.175715599999999, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Besançon", "latitude": 47.237829, "longitude": 6.024053899999999, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Nancy", "latitude": 48.692054, "longitude": 6.184417, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Argenteuil", "latitude": 48.9472096, "longitude":  2.2466847, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Rouen", "latitude": 49.44323199999999, "longitude": 1.099971, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Montreuil", "latitude": 48.863812, "longitude": 2.448451, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Mulhouse", "latitude": 47.750839, "longitude": 7.335888, "north": 0, "south": 0, "idk": 0 },
+      { "name": "Caen", "latitude": 49.182863, "longitude": -0.370679, "north": 0, "south": 0, "idk": 0 }
+    ]
 
     /* Display component */
     return <div className={classes.join(' ')}>
@@ -269,6 +383,10 @@ export default class App extends Component {
       {/* Results */}
       <div className='results-panel'>
         <p>Results</p>
+        <button onClick={this.handleActivateResultsGaugeMode}>Voir la jauge</button>
+        <button onClick={this.handleActivateResultsMapMode}>Voir la carte</button>
+        <Gauge data={fakeData/*state.data_results*/} />
+        <FranceMap data={fakeData/*state.data_results*/} />
         <button onClick={this.handleActivateGameMode}>Play again</button>
       </div>
 
