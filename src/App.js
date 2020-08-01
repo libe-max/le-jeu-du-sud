@@ -28,7 +28,7 @@ export default class App extends Component {
       error_sheet: null,
       data_sheet: [],
 
-      mode: 'intro',
+      mode: 'results',
 
       loading_cities: false,
       error_cities: null,
@@ -327,46 +327,26 @@ export default class App extends Component {
     const currentCityName = currentCity.name
 
     const fakeData = [
-      { "name": "Paris", "latitude": 48.856614, "longitude": 2.3522219, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Marseille", "latitude": 43.296482, "longitude": 5.36978, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Lyon", "latitude": 45.764043, "longitude": 4.835659, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Toulouse", "latitude": 43.604652, "longitude": 1.444209, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Nice", "latitude": 43.7101728, "longitude":  7.261953200000001, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Nantes", "latitude": 47.218371, "longitude": -1.553621, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Montpellier", "latitude": 43.610769, "longitude": 3.876716, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Strasbourg", "latitude": 48.5734053, "longitude":  7.752111299999999, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Bordeaux", "latitude": 44.837789, "longitude": -0.57918, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Lille", "latitude": 50.62925, "longitude":  3.057256, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Rennes", "latitude": 48.117266, "longitude": -1.6777926, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Reims", "latitude": 49.258329, "longitude": 4.031696, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Saint-Étienne", "latitude": 45.439695, "longitude": 4.3871779, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Toulon", "latitude": 43.124228, "longitude": 5.928, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Le Havre", "latitude": 49.49437, "longitude":  0.107929, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Grenoble", "latitude": 45.188529, "longitude": 5.724524, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Dijon", "latitude": 47.322047, "longitude": 5.04148, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Angers", "latitude": 47.47116159999999, "longitude": -0.5518257, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Nîmes", "latitude": 43.836699, "longitude": 4.360054, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Saint-Denis", "latitude": 48.936181, "longitude": 2.357443, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Villeurbanne", "latitude": 45.771944, "longitude": 4.8901709, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Clermont-Ferrand", "latitude": 45.77722199999999, "longitude": 3.087025, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Le Mans", "latitude": 48.00611000000001, "longitude": 0.199556, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Aix-en-Provence", "latitude": 43.529742, "longitude": 5.447426999999999, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Brest", "latitude": 48.390394, "longitude": -4.486076, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Tours", "latitude": 47.394144, "longitude": 0.68484, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Amiens", "latitude": 49.894067, "longitude": 2.295753, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Limoges", "latitude": 45.83361900000001, "longitude": 1.261105, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Annecy", "latitude": 45.899247, "longitude": 6.129384, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Perpignan", "latitude": 42.6886591, "longitude":  2.8948332, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Boulogne-Billancourt", "latitude": 48.8396952, "longitude":  2.2399123, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Orléans", "latitude": 47.902964, "longitude": 1.909251, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Metz", "latitude": 49.1193089, "longitude":  6.175715599999999, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Besançon", "latitude": 47.237829, "longitude": 6.024053899999999, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Nancy", "latitude": 48.692054, "longitude": 6.184417, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Argenteuil", "latitude": 48.9472096, "longitude":  2.2466847, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Rouen", "latitude": 49.44323199999999, "longitude": 1.099971, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Montreuil", "latitude": 48.863812, "longitude": 2.448451, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Mulhouse", "latitude": 47.750839, "longitude": 7.335888, "north": 0, "south": 0, "idk": 0 },
-      { "name": "Caen", "latitude": 49.182863, "longitude": -0.370679, "north": 0, "south": 0, "idk": 0 }
+      { "_id": "5f22d9c6b425424c28ee8725", "name": "Paris", "latitude": 48.856614, "longitude": 2.3522219, "north": 5, "south": 5, "idk": 3 },
+      { "_id": "5f22d9c6b425424c28ee8726", "name": "Marseille", "latitude": 43.296482, "longitude": 5.36978, "north": 2, "south": 5, "idk": 2 },
+      { "_id": "5f22d9c6b425424c28ee8727", "name": "Lyon", "latitude": 45.764043, "longitude": 4.835659, "north": 5, "south": 7, "idk": 2 },
+      { "_id": "5f22d9c6b425424c28ee8728", "name": "Toulouse", "latitude": 43.604652, "longitude": 1.444209, "north": 4, "south": 4, "idk": 1 },
+      { "_id": "5f22d9c6b425424c28ee8729", "name": "Nice", "latitude": 43.7101728, "longitude": 7.261953200000001, "north": 1, "south": 8, "idk": 2 },
+      { "_id": "5f22d9c6b425424c28ee872a", "name": "Nantes", "latitude": 47.218371, "longitude": -1.553621, "north": 8, "south": 4, "idk": 2 },
+      { "_id": "5f22d9c6b425424c28ee872b", "name": "Montpellier", "latitude": 43.610769, "longitude": 3.876716, "north": 6, "south": 6, "idk": 5 },
+      { "_id": "5f22d9c6b425424c28ee872c", "name": "Strasbourg", "latitude": 48.5734053, "longitude": 7.752111299999999, "north": 7, "south": 4, "idk": 4 },
+      { "_id": "5f22d9c6b425424c28ee872d", "name": "Bordeaux", "latitude": 44.837789, "longitude": -0.57918, "north": 4, "south": 3, "idk": 3 },
+      { "_id": "5f22d9c6b425424c28ee872e", "name": "Lille", "latitude": 50.62925, "longitude": 3.057256, "north": 3, "south": 3, "idk": 3 },
+      { "_id": "5f22d9c6b425424c28ee872f", "name": "Rennes", "latitude": 48.117266, "longitude": -1.6777926, "north": 4, "south": 4, "idk": 4 },
+      { "_id": "5f22d9c6b425424c28ee8730", "name": "Reims", "latitude": 49.258329, "longitude": 4.031696, "north": 5, "south": 5, "idk": 2 },
+      { "_id": "5f22d9c6b425424c28ee8731", "name": "Saint-Étienne", "latitude": 45.439695, "longitude": 4.3871779, "north": 6, "south": 10, "idk": 3 },
+      { "_id": "5f22d9c6b425424c28ee8732", "name": "Toulon", "latitude": 43.124228, "longitude": 5.928, "north": 2, "south": 4, "idk": 4 },
+      { "_id": "5f22d9c6b425424c28ee8733", "name": "Le Havre", "latitude": 49.49437, "longitude": 0.107929, "north": 3, "south": 4, "idk": 3 },
+      { "_id": "5f22d9c6b425424c28ee8734", "name": "Grenoble", "latitude": 45.188529, "longitude": 5.724524, "north": 9, "south": 5, "idk": 8 },
+      { "_id": "5f22d9c6b425424c28ee8735", "name": "Dijon", "latitude": 47.322047, "longitude": 5.04148, "north": 3, "south": 10, "idk": 2 },
+      { "_id": "5f22d9c6b425424c28ee8736", "name": "Angers", "latitude": 47.47116159999999, "longitude": -0.5518257, "north": 4, "south": 5, "idk": 4 },
+      { "_id": "5f22d9c6b425424c28ee8737", "name": "Nîmes", "latitude": 43.836699, "longitude": 4.360054, "north": 4, "south": 5, "idk": 1 },
+      { "_id": "5f22d9c6b425424c28ee8738", "name": "Saint-Denis", "latitude": 48.936181, "longitude": 2.357443, "north": 4, "south": 4, "idk": 4 }
     ]
 
     /* Display component */
@@ -432,7 +412,7 @@ export default class App extends Component {
               </Paragraph>
             </div>
           </div>
-          <Gauge data={/*fakeData*/state.data_results} />
+          <Gauge data={fakeData/*state.data_results*/} />
           <button
             className='results-panel__primary-button'
             onClick={this.handleActivateResultsMapMode}>
@@ -457,7 +437,7 @@ export default class App extends Component {
               <br /><br />
               {`Les couleurs du fond de carte correspondent à la latitude réelle des zones coloriées : si un cercle gris est placé dans la zone rose, c’est que les lecteurs l’imaginent au Nord alors qu’il est au Sud, et vice versa.`}
               </Paragraph>
-              <FranceMap data={/*fakeData*/state.data_results} />
+              <FranceMap data={fakeData/*state.data_results*/} />
               <button
                 className='results-panel__primary-button'
                 onClick={this.handleActivateGameMode}>

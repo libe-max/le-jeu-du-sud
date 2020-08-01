@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="442px" height="440px" viewBox="0 0 442 440" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>down-diagonal</title>
+    <g id="down-diagonal" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+        <path d="M0,0 C0,0 147.333333,146.666667 442,440 C147.333333,146.666667 0,0 0,0 Z" id="line" stroke="#999999" stroke-width="4"></path>
+    </g>
+</svg>

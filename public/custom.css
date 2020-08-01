@@ -93,7 +93,7 @@ body {
 .intro-panel > .lblb-paragraph {
   text-align: center;
   padding: .5rem;
-  max-width: 40rem;
+  max-width: 32rem;
 }
 
 .intro-panel > button {
@@ -237,23 +237,13 @@ body {
 .results-panel__head > .lblb-overhead:nth-child(1) span {
   font-weight: 800;
   margin-top: calc(var(--dsk-reg-margin-bottom) / 2);
-  margin-bottom: .25rem;
   font-size: 2.5rem;
 }
 
-.results-panel__head > .lblb-paragraph {
-  font-family: 'Libe-Sans-Semicondensed';
-  text-transform: none;
-  color: #212121;
-  text-align: center;
-  font-weight: 400;
-  margin-bottom: var(--dsk-reg-margin-bottom);
-  text-align: center;
-}
-
 .results-panel__text {
-  max-width: 40rem;
+  max-width: 32rem;
   text-align: center;
+  margin-top: calc(var(--dsk-reg-margin-bottom) / 2);
 }
 
 .results-panel__jauge {
@@ -288,45 +278,86 @@ body {
 .jauge {
   display: flex;
   max-width: calc(100% - 2rem);
-  width: 20vw;
-  height: calc(100vh - 2rem);
-  justify-content: 'space-between'
+  width: 32rem;
+  height: calc(100vh);
+  justify-content: 'space-between';
+  margin-top: calc(var(--dsk-reg-margin-bottom) / 2);
+  position: relative;
 }
 
 .jauge__latitude-bar {
-  width: .75rem;
+  width: calc(100vh * 64 / 696);
   height: 100%;
+  flex-shrink: 0;
+  flex-grow: 0;
   background-image: url(./jauge-latitude.svg);
-  background-size: cover;
-  background-position: center;
+  background-size: contain;
+  background-position: center left;
   background-repeat: no-repeat;
   position: relative;
 }
 
-.jauge__latitude-point {
+.jauge__votes-bar {
+  width: calc(100vh * 83 / 696);
+  height: 100%;
+  flex-shrink: 0;
+  flex-grow: 0;
+  background-image: url(./jauge-votes.svg);
+  background-size: contain;
+  background-position: center right;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.jauge__markers {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.jauge__markers-wrapper {
+  z-index: 2;
   position: absolute;
-  width: .75rem;
-  height: .75rem;
+  height: 100%;
+  left: calc(-1 * 100vh * 7 / 696);
+  right: calc(-1 * 100vh * 71 / 696);
+}
+
+.jauge__marker-wrapper {
+  z-index: 3;
+  position: absolute;
+  left: 0;
   right: 0;
+}
+
+.jauge__up-difference-marker,
+.jauge__down-difference-marker {
+  z-index: 4;
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  border: 1px solid black;
+  transform-origin: top left;
+}
+
+.jauge__latitude-point {
+  z-index: 5;
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  transform: translate(-50%, -50%);
+  /*right: calc((100vh * 13 / 696) / 2);*/
+  left: 0;
   border-radius: .75rem;
   background: red;
 }
 
-.jauge__votes-bar {
-  width: 1.5rem;
-  height: 100%;
-  background-image: url(./jauge-votes.svg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  position: relative;
-}
-
 .jauge__votes-point {
+  z-index: 6;
   position: absolute;
-  width: .75rem;
-  height: .75rem;
-  transform: translateX(-50%);
+  width: 2.5rem;
+  height: 2.5rem;
+  transform: translate(-50%, -50%);
   left: 50%;
   border-radius: .75rem;
   background: blue;
