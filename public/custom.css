@@ -18,6 +18,7 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  background-position: 50% calc(50% + 61px);
 }
 
 #libe-labo-app-wrapper {
@@ -51,6 +52,10 @@ body {
 }
 
 @media screen and (max-width: 63rem) {
+  body {
+    background-position: 50% calc(50% + 50px);
+  }
+
   .le-jeu-du-sud {
     width: calc(100% - 1rem);
     margin: .5rem;
@@ -211,6 +216,10 @@ body {
  * RESULTS PANEL
  *
  * * * * * * * * * * * * * * * * * * * * * */
+.results-panel {
+  padding: .5rem;
+}
+
 .results-panel__jauge,
 .results-panel__map {
   display: flex;
@@ -316,7 +325,6 @@ body {
 }
 
 .jauge__markers-wrapper {
-  z-index: 2;
   position: absolute;
   height: 100%;
   left: calc(-1 * 100vh * 7 / 696);
@@ -324,10 +332,9 @@ body {
 }
 
 .jauge__marker-wrapper {
-  z-index: 3;
   position: absolute;
-  left: 0;
-  right: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .jauge__up-difference-marker,
@@ -336,31 +343,61 @@ body {
   position: absolute;
   width: 100%;
   height: 1px;
-  border: 1px solid black;
+  border: 1px solid #212121;
   transform-origin: top left;
+  opacity: .2;
 }
 
-.jauge__latitude-point {
+.jauge__up-difference-marker {
+  bottom: 0;
+}
+
+.jauge__down-difference-marker {
+  top: 0;
+}
+
+.jauge__latitude-marker {
   z-index: 5;
   position: absolute;
   width: 4px;
   height: 4px;
   transform: translate(-50%, -50%);
-  /*right: calc((100vh * 13 / 696) / 2);*/
   left: 0;
   border-radius: .75rem;
-  background: red;
+  background: #212121;
+  opacity: .5;
 }
 
-.jauge__votes-point {
+.jauge__vote-marker {
   z-index: 6;
   position: absolute;
   width: 2.5rem;
   height: 2.5rem;
-  transform: translate(-50%, -50%);
-  left: 50%;
-  border-radius: .75rem;
+  transform: translate(50%, -50%);
+  right: 0;
+  border-radius: 2.5rem;
   background: blue;
+}
+
+.jauge__vote-marker:hover {
+  background: green;
+  z-index: 700;
+}
+
+@media screen and (max-width: 63rem) {
+  .jauge {
+    max-width: calc(100% - 10rem);
+    align-self: flex-start;
+    margin-left: 2rem;
+  }
+}
+
+@media screen and (max-width: 40rem) {
+  .jauge {
+    max-width: calc(100% - 7rem);
+    align-self: flex-start;
+    margin-left: .5rem;
+  }
 }
 
 /* * * * * * * * * * * * * * * * * * * * * *

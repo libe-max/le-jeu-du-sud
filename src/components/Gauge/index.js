@@ -18,16 +18,15 @@ class Gauge extends Component {
       const { width, height } = boundingClientRect
       const diago = Math.pow(Math.pow(width, 2) + Math.pow(height, 2), .5)
       const angle = 180 * Math.atan(height / width) / Math.PI
-      console.log(angle)
       const $upDifferenceMarker = marker.querySelector('.jauge__up-difference-marker')
       const $downDifferenceMarker = marker.querySelector('.jauge__down-difference-marker')
       if ($upDifferenceMarker) {
         $upDifferenceMarker.style.width = `${diago}px`
-        $upDifferenceMarker.style.transform = `rotate(${-1 * angle}deg)`
+        $upDifferenceMarker.style.transform = `translate(0, 50%) rotate(${-1 * angle}deg)`
       }
       if ($downDifferenceMarker) {
         $downDifferenceMarker.style.width = `${diago}px`
-        $downDifferenceMarker.style.transform = `rotate(${angle}deg)`
+        $downDifferenceMarker.style.transform = `translate(0, -50%) rotate(${angle}deg)`
       }
     })
   }
@@ -46,13 +45,15 @@ class Gauge extends Component {
           data.map(city => {
             const latitudeRatio = 100 - (100 * (city.latitude - mapSouthBound) / (mapNorthBound - mapSouthBound))
             const voteRatio = 100 * city.south / (city.north + city.south)
+            console.log(voteRatio)
             const topValue = Math.min(latitudeRatio, voteRatio)
             const heightValue = Math.abs(latitudeRatio - voteRatio)
             const markerWarpperStyle = { top: `${topValue}%`, height: `${heightValue}%` }
+            const isUpsideDown = latitudeRatio > voteRatio
             return <div className='jauge__marker-wrapper' style={markerWarpperStyle}>
-              <div className={latitudeRatio > voteRatio ? 'jauge__up-difference-marker' : 'jauge__down-difference-marker'} />
-              <div className='jauge__latitude-marker' />
-              <div className='jauge__vote-wrapper' />
+              <div className={isUpsideDown ? 'jauge__up-difference-marker' : 'jauge__down-difference-marker'} />
+              <div className='jauge__latitude-marker' style={{ top: `${isUpsideDown ? 100 : 0}%` }} />
+              <div className='jauge__vote-marker' style={{ top: `${isUpsideDown ? 0 : 100}%` }} />
             </div>
           })
         // data.map(city => {
