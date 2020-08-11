@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import Paragraph from 'libe-components/lib/text-levels/Paragraph'
+import chroma from 'chroma-js'
 
 class Gauge extends Component {
   constructor () {
@@ -45,15 +47,18 @@ class Gauge extends Component {
           data.map(city => {
             const latitudeRatio = 100 - (100 * (city.latitude - mapSouthBound) / (mapNorthBound - mapSouthBound))
             const voteRatio = 100 * city.south / (city.north + city.south)
-            console.log(voteRatio)
             const topValue = Math.min(latitudeRatio, voteRatio)
             const heightValue = Math.abs(latitudeRatio - voteRatio)
             const markerWarpperStyle = { top: `${topValue}%`, height: `${heightValue}%` }
             const isUpsideDown = latitudeRatio > voteRatio
+            const colorRange = chroma.scale(['#95D5F0', '#ACDEF3', '#C3E6F5', '#DAEFF8', '#F9F9F9', '#FBFAE6', '#FBF9D2', '#FBF7BE', '#FBF6A9', '#FBF495'])
+            const color = colorRange(latitudeRatio / 100).hex()
             return <div className='jauge__marker-wrapper' style={markerWarpperStyle}>
               <div className={isUpsideDown ? 'jauge__up-difference-marker' : 'jauge__down-difference-marker'} />
               <div className='jauge__latitude-marker' style={{ top: `${isUpsideDown ? 100 : 0}%` }} />
-              <div className='jauge__vote-marker' style={{ top: `${isUpsideDown ? 0 : 100}%` }} />
+              <div className='jauge__vote-marker' style={{ top: `${isUpsideDown ? 0 : 100}%`, background: `${color}` }}>
+                <span className='jauge__city-marker'><Paragraph small>{city.name}</Paragraph></span>
+              </div>
             </div>
           })
         // data.map(city => {

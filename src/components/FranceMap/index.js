@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import chroma from 'chroma-js'
+import Paragraph from 'libe-components/lib/text-levels/Paragraph'
 
 class FranceMap extends Component {
   constructor () {
@@ -11,35 +13,28 @@ class FranceMap extends Component {
     const mapEastBound = 9.560000
     const mapSouthBound = 41.364524
     const mapNorthBound = 51.088957
-    return <div style={{
-      position: 'relative',
-      width: 'calc(100vw - 2rem)',
-      height: 'calc(0.985853 * (100vw - 2rem))',
-      maxWidth: '63rem',
-      maxHeight: 'calc(0.985853 * 63rem)',
-      backgroundImage: 'url(./france-map.svg)'
-    }}>{
-      data.map(city => {
-        const voteRatio = 100 * city.south / (city.north + city.south)
-        const vPos = 100 - (100 * (city.latitude - mapSouthBound) / (mapNorthBound - mapSouthBound))
-        const vPosCorrect = vPos + 2 * Math.pow(Math.sin(Math.PI * vPos / 100), 2)
-        const hPos = 100 * (city.longitude - mapWestBound) / (mapEastBound - mapWestBound)
-        return <div
-          key={city.name}
-          style={{
-            position: 'absolute',
-            top: `${vPosCorrect}%`,
-            left: `${hPos}%`,
-            width: '.5rem',
-            height: '.5rem',
-            borderRadius: '2rem',
-            background: `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`,
-            transform: 'translate(-50%, 0)'
-          }}>
-          <span style={{position: 'relative', width: 0, height: 0}}>{city.name}</span>
-        </div>
-      })
+    return <div className='france-map'>
+      <img src='./france-map.svg' />
+      <div className='france-map__markers'>{
+        data.map(city => {
+          const voteRatio = 100 * city.south / (city.north + city.south)
+          const latitudeRatio = 100 - (100 * (city.latitude - mapSouthBound) / (mapNorthBound - mapSouthBound))
+          const latitudeRatioCorrect = latitudeRatio + 2 * Math.pow(Math.sin(Math.PI * latitudeRatio / 100), 2)
+          const hPos = 100 * (city.longitude - mapWestBound) / (mapEastBound - mapWestBound)
+          
+          const colorRange = chroma.scale(['#95D5F0', '#ACDEF3', '#C3E6F5', '#DAEFF8', '#F9F9F9', '#FBFAE6', '#FBF9D2', '#FBF7BE', '#FBF6A9', '#FBF495'])
+          const color = colorRange(voteRatio / 100).hex()
+          
+          return <div
+            className='france-map__marker'
+            key={city.name}
+            style={{ top: `${latitudeRatioCorrect}%`, left: `${hPos}%`, background: color }}>
+            <Paragraph small><span className='france-map__vote-ratio-marker'>{Math.round(voteRatio)}%</span></Paragraph>
+            <Paragraph><span className='france-map__name-marker'>{city.name.replace(/\s/igm, ' ')}</span></Paragraph>
+          </div>
+        })
     }</div>
+    </div>
   }
 }
 

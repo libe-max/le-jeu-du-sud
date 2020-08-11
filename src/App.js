@@ -54,6 +54,7 @@ export default class App extends Component {
     this.handleVote = this.handleVote.bind(this)
     this.handleActivateResultsGaugeMode = this.handleActivateResultsGaugeMode.bind(this)
     this.handleActivateResultsMapMode = this.handleActivateResultsMapMode.bind(this)
+    this.handlePlayAgainClick = this.handlePlayAgainClick.bind(this)
   }
 
   /* * * * * * * * * * * * * * * * *
@@ -178,6 +179,7 @@ export default class App extends Component {
     try {
       this.setState(curr => ({
         ...curr,
+        mode: 'game',
         loading_cities: true,
         error_cities: null,
         data_cities: []
@@ -192,7 +194,6 @@ export default class App extends Component {
       if (body.err) throw new Error(body.err)
       this.setState(curr => ({
         ...curr,
-        mode: 'game',
         loading_cities: false,
         error_cities: null,
         data_cities: body.data
@@ -229,7 +230,9 @@ export default class App extends Component {
         ...curr,
         loading_results: true,
         error_results: null,
-        data_results: []
+        data_results: [],
+        pending_votes: [],
+        current_city_nb: 0
       }))
       const request = `${serverUrl}/submit-votes`
       const response = await window.fetch(request, {
@@ -272,6 +275,13 @@ export default class App extends Component {
       ...current,
       results_mode: 'map'
     }))
+  }
+
+  handlePlayAgainClick (e) {
+    this.setState(
+      current => ({ ...current, results_mode: 'gauge' }),
+      this.handleActivateGameMode
+    )
   }
 
   /* * * * * * * * * * * * * * * * *
@@ -399,51 +409,52 @@ export default class App extends Component {
       {/* Results */}
       <div className='results-panel'>
         <div className='results-panel__jauge'>
+          <div className='results-panel__head'>
+            <Overhead big>Sud ressenti</Overhead>
+            <Overhead big>en pourcentage</Overhead>
+          </div>
           <div className='results-panel__text'>
-            <div className='results-panel__head'>
-              <Overhead big>Sud ressenti</Overhead>
-              <Overhead big>en pourcentage</Overhead>
-            </div>
-            <div className='results-panel__text'>
-              <Paragraph literary>
-              {`Votre vote a été ajouté aux ${state.data_votes_cnt} votes précédents pour calculer le taux de Sud ressenti de la France (axe central) : si tous les votants ont placé une ville au Nord, son pourcentage de Sud ressenti est de 0%.`}
-              <br /><br />
-              {`L’axe de gauche représente la latitude réelle de la ville : plus le lien qui relie une ville à sa latitude réelle est incliné, plus le pourcentage de Sud ressenti diffère de la réalité.`}
-              </Paragraph>
-            </div>
+            <Paragraph literary>
+            {`Votre vote a été ajouté aux ${state.data_votes_cnt} votes précédents pour calculer le taux de Sud ressenti de la France (axe central) : si tous les votants ont placé une ville au Nord, son pourcentage de Sud ressenti est de 0%.`}
+            <br /><br />
+            {`L’axe de gauche représente la latitude réelle de la ville : plus le lien qui relie une ville à sa latitude réelle est incliné, plus le pourcentage de Sud ressenti diffère de la réalité.`}
+            </Paragraph>
           </div>
           <Gauge data={fakeData/*state.data_results*/} />
-          <button
-            className='results-panel__primary-button'
-            onClick={this.handleActivateResultsMapMode}>
-            Voir les résultats sur une carte
-          </button>
-          <button
-            className='results-panel__secondary-button'
-            onClick={this.handleActivateGameMode}>
-            Rejouer
-          </button>
+          <div className='results-panel__buttons'>
+            <button
+              className='results-panel__primary-button'
+              onClick={this.handleActivateResultsMapMode}>
+              <Paragraph>Voir les résultats</Paragraph>
+              <Overhead small>sur une carte</Overhead>
+            </button>
+            <button
+              className='results-panel__secondary-button'
+              onClick={this.handlePlayAgainClick}>
+              <Overhead small>Rejouer</Overhead>
+            </button>
+          </div>
         </div>
 
         <div className='results-panel__map'>
+          <div className='results-panel__head'>
+            <Overhead big>Sud ressenti</Overhead>
+            <Overhead big>en pourcentage</Overhead>
+          </div>
           <div className='results-panel__text'>
-            <div className='results-panel__head'>
-              <Overhead big>Sud ressenti</Overhead>
-              <Overhead big>en pourcentage</Overhead>
-            </div>
-            <div className='results-panel__text'>
-              <Paragraph literary>
-              {`Les cercles sont coloriés par rapport au taux de Sud ressenti présenté précédemment.`}
-              <br /><br />
-              {`Les couleurs du fond de carte correspondent à la latitude réelle des zones coloriées : si un cercle gris est placé dans la zone rose, c’est que les lecteurs l’imaginent au Nord alors qu’il est au Sud, et vice versa.`}
-              </Paragraph>
-              <FranceMap data={fakeData/*state.data_results*/} />
-              <button
-                className='results-panel__primary-button'
-                onClick={this.handleActivateGameMode}>
-                Rejouer
-              </button>
-            </div>
+            <Paragraph literary>
+            {`Les cercles sont coloriés par rapport au taux de Sud ressenti présenté précédemment.`}
+            <br /><br />
+            {`Les couleurs du fond de carte correspondent à la latitude réelle des zones coloriées : si un cercle gris est placé dans la zone rose, c’est que les lecteurs l’imaginent au Nord alors qu’il est au Sud, et vice versa.`}
+            </Paragraph>
+          </div>
+          <FranceMap data={fakeData/*state.data_results*/} />
+          <div className='results-panel__buttons'>
+            <button
+              className='results-panel__primary-button'
+              onClick={this.handlePlayAgainClick}>
+              <Overhead small>Rejouer</Overhead>
+            </button>
           </div>
         </div>
       </div>
@@ -451,13 +462,13 @@ export default class App extends Component {
       {/* Footer */}
       <div className='lblb-default-apps-footer'>
         <ShareArticle short iconsOnly tweet={props.meta.tweet} url={props.meta.url} />
+        <LibeLaboLogo target='blank' />
         <Paragraph small>
           <span>Production : </span>
           <a href='https://www.liberation.fr/auteur/18438-clara-dealberto'>Clara&nbsp;Dealberto</a>
           <span> et&nbsp;</span>
           <a href='https://www.liberation.fr/auteur/19310-maxime-fabas'>Maxime&nbsp;Fabas</a>
         </Paragraph>
-        <LibeLaboLogo target='blank' />
       </div>
     </div>
   }
