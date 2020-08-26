@@ -3,10 +3,6 @@ import chroma from 'chroma-js'
 import Paragraph from 'libe-components/lib/text-levels/Paragraph'
 
 class FranceMap extends Component {
-  constructor () {
-    super()
-  }
-
   render () {
     const { data } = this.props
     const mapWestBound = -4.795264
@@ -14,7 +10,7 @@ class FranceMap extends Component {
     const mapSouthBound = 41.364524
     const mapNorthBound = 51.088957
     return <div className='france-map'>
-      <img src='./france-map.svg' />
+      <img alt='Map of France' src='./france-map.svg' />
       <div className='france-map__markers'>{
         data.map(city => {
           const voteRatio = 100 * city.south / (city.north + city.south)
@@ -22,7 +18,7 @@ class FranceMap extends Component {
           const latitudeRatioCorrect = latitudeRatio + 2 * Math.pow(Math.sin(Math.PI * latitudeRatio / 100), 2)
           const hPos = 100 * (city.longitude - mapWestBound) / (mapEastBound - mapWestBound)
           
-          const colorRange = chroma.scale(['#95D5F0', '#ACDEF3', '#C3E6F5', '#DAEFF8', '#F9F9F9', '#FBFAE6', '#FBF9D2', '#FBF7BE', '#FBF6A9', '#FBF495'])
+          const colorRange = chroma.scale(['#95D5F0', '#ACDEF3', '#C3E6F5', '#DAEFF8', '#F9F9F9', '#FBFAE6', '#FBF9D2', '#FBF7BE', '#FBF6A9', '#FBF495']).mode('lab')
           const color = colorRange(voteRatio / 100).hex()
           
           return <div

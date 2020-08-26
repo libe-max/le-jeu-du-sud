@@ -20,6 +20,7 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: 50% calc(50% + 61px);
+  overflow-x: hidden;
 }
 
 #libe-labo-app-wrapper {

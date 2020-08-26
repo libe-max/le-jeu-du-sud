@@ -4,11 +4,11 @@ const currentHostname = typeof window !== 'undefined' ? window.location.hostname
 const config = {
   meta: {
     author: 'Libé Labo',
-    title: 'Libération - ',
+    title: 'On dirait le sud',
     url: '',
     description: '',
     image: '',
-    xiti_id: 'test',
+    xiti_id: 'on-dirait-le-sud',
     tweet: '',
   },
   tracking: {

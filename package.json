@@ -2,13 +2,14 @@
   "name": "libe-apps-template",
   "version": "0.2.3",
   "private": true,
+  "homepage": "/apps/2020/09/on-dirait-le-sud",
   "dependencies": {
     "chroma-js": "^2.1.0",
     "libe-components": "^1.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-helmet": "^5.2.1",
-    "react-scripts": "^3.4.1"
+    "react-scripts": "^3.4.3"
   },
   "scripts": {
     "start": "react-scripts start",

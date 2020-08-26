@@ -35,8 +35,6 @@ class Gauge extends Component {
 
   render () {
     const { data } = this.props
-    const mapWestBound = -4.795264
-    const mapEastBound = 9.560000
     const mapSouthBound = 41.364524
     const mapNorthBound = 51.088957
 
@@ -53,7 +51,10 @@ class Gauge extends Component {
             const isUpsideDown = latitudeRatio > voteRatio
             const colorRange = chroma.scale(['#95D5F0', '#ACDEF3', '#C3E6F5', '#DAEFF8', '#F9F9F9', '#FBFAE6', '#FBF9D2', '#FBF7BE', '#FBF6A9', '#FBF495'])
             const color = colorRange(latitudeRatio / 100).hex()
-            return <div className='jauge__marker-wrapper' style={markerWarpperStyle}>
+            return <div
+              key={city.name}
+              className='jauge__marker-wrapper'
+              style={markerWarpperStyle}>
               <div className={isUpsideDown ? 'jauge__up-difference-marker' : 'jauge__down-difference-marker'} />
               <div className='jauge__latitude-marker' style={{ top: `${isUpsideDown ? 100 : 0}%` }} />
               <div className='jauge__vote-marker' style={{ top: `${isUpsideDown ? 0 : 100}%`, background: `${color}` }}>

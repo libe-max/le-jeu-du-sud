@@ -3,7 +3,6 @@ import Loader from 'libe-components/lib/blocks/Loader'
 import LoadingError from 'libe-components/lib/blocks/LoadingError'
 import ShareArticle from 'libe-components/lib/blocks/ShareArticle'
 import LibeLaboLogo from 'libe-components/lib/blocks/LibeLaboLogo'
-import ArticleMeta from 'libe-components/lib/blocks/ArticleMeta'
 import PageTitle from 'libe-components/lib/text-levels/PageTitle'
 import Overhead from 'libe-components/lib/text-levels/Overhead'
 import Paragraph from 'libe-components/lib/text-levels/Paragraph'
@@ -28,7 +27,7 @@ export default class App extends Component {
       error_sheet: null,
       data_sheet: [],
 
-      mode: 'results',
+      mode: 'intro',
 
       loading_cities: false,
       error_cities: null,
@@ -41,6 +40,7 @@ export default class App extends Component {
       error_results: null,
       data_results: [],
 
+      results_mode: 'gauge',
       data_votes_cnt: 0,
 
       keystrokes_history: [],
@@ -336,34 +336,11 @@ export default class App extends Component {
     const currentCity = state.data_cities.length ? state.data_cities[currentCityNb] : {}
     const currentCityName = currentCity.name
 
-    const fakeData = [
-      { "_id": "5f22d9c6b425424c28ee8725", "name": "Paris", "latitude": 48.856614, "longitude": 2.3522219, "north": 5, "south": 5, "idk": 3 },
-      { "_id": "5f22d9c6b425424c28ee8726", "name": "Marseille", "latitude": 43.296482, "longitude": 5.36978, "north": 2, "south": 5, "idk": 2 },
-      { "_id": "5f22d9c6b425424c28ee8727", "name": "Lyon", "latitude": 45.764043, "longitude": 4.835659, "north": 5, "south": 7, "idk": 2 },
-      { "_id": "5f22d9c6b425424c28ee8728", "name": "Toulouse", "latitude": 43.604652, "longitude": 1.444209, "north": 4, "south": 4, "idk": 1 },
-      { "_id": "5f22d9c6b425424c28ee8729", "name": "Nice", "latitude": 43.7101728, "longitude": 7.261953200000001, "north": 1, "south": 8, "idk": 2 },
-      { "_id": "5f22d9c6b425424c28ee872a", "name": "Nantes", "latitude": 47.218371, "longitude": -1.553621, "north": 8, "south": 4, "idk": 2 },
-      { "_id": "5f22d9c6b425424c28ee872b", "name": "Montpellier", "latitude": 43.610769, "longitude": 3.876716, "north": 6, "south": 6, "idk": 5 },
-      { "_id": "5f22d9c6b425424c28ee872c", "name": "Strasbourg", "latitude": 48.5734053, "longitude": 7.752111299999999, "north": 7, "south": 4, "idk": 4 },
-      { "_id": "5f22d9c6b425424c28ee872d", "name": "Bordeaux", "latitude": 44.837789, "longitude": -0.57918, "north": 4, "south": 3, "idk": 3 },
-      { "_id": "5f22d9c6b425424c28ee872e", "name": "Lille", "latitude": 50.62925, "longitude": 3.057256, "north": 3, "south": 3, "idk": 3 },
-      { "_id": "5f22d9c6b425424c28ee872f", "name": "Rennes", "latitude": 48.117266, "longitude": -1.6777926, "north": 4, "south": 4, "idk": 4 },
-      { "_id": "5f22d9c6b425424c28ee8730", "name": "Reims", "latitude": 49.258329, "longitude": 4.031696, "north": 5, "south": 5, "idk": 2 },
-      { "_id": "5f22d9c6b425424c28ee8731", "name": "Saint-Étienne", "latitude": 45.439695, "longitude": 4.3871779, "north": 6, "south": 10, "idk": 3 },
-      { "_id": "5f22d9c6b425424c28ee8732", "name": "Toulon", "latitude": 43.124228, "longitude": 5.928, "north": 2, "south": 4, "idk": 4 },
-      { "_id": "5f22d9c6b425424c28ee8733", "name": "Le Havre", "latitude": 49.49437, "longitude": 0.107929, "north": 3, "south": 4, "idk": 3 },
-      { "_id": "5f22d9c6b425424c28ee8734", "name": "Grenoble", "latitude": 45.188529, "longitude": 5.724524, "north": 9, "south": 5, "idk": 8 },
-      { "_id": "5f22d9c6b425424c28ee8735", "name": "Dijon", "latitude": 47.322047, "longitude": 5.04148, "north": 3, "south": 10, "idk": 2 },
-      { "_id": "5f22d9c6b425424c28ee8736", "name": "Angers", "latitude": 47.47116159999999, "longitude": -0.5518257, "north": 4, "south": 5, "idk": 4 },
-      { "_id": "5f22d9c6b425424c28ee8737", "name": "Nîmes", "latitude": 43.836699, "longitude": 4.360054, "north": 4, "south": 5, "idk": 1 },
-      { "_id": "5f22d9c6b425424c28ee8738", "name": "Saint-Denis", "latitude": 48.936181, "longitude": 2.357443, "north": 4, "south": 4, "idk": 4 }
-    ]
-
     /* Display component */
     return <div className={classes.join(' ')}>
       {/* Intro */}
       <div className='intro-panel'>
-        <img src='./logo.svg' />
+        <img alt='Logo' src='./logo.svg' />
         <PageTitle small>On&nbsp;dirait le&nbsp;sud</PageTitle>
         <Overhead>Calculateur de sud ressenti</Overhead>
         <Paragraph literary>
@@ -420,7 +397,7 @@ export default class App extends Component {
             {`L’axe de gauche représente la latitude réelle de la ville : plus le lien qui relie une ville à sa latitude réelle est incliné, plus le pourcentage de Sud ressenti diffère de la réalité.`}
             </Paragraph>
           </div>
-          <Gauge data={fakeData/*state.data_results*/} />
+          <Gauge data={/*fakeData*/state.data_results} />
           <div className='results-panel__buttons'>
             <button
               className='results-panel__primary-button'
@@ -448,7 +425,7 @@ export default class App extends Component {
             {`Les couleurs du fond de carte correspondent à la latitude réelle des zones coloriées : si un cercle gris est placé dans la zone rose, c’est que les lecteurs l’imaginent au Nord alors qu’il est au Sud, et vice versa.`}
             </Paragraph>
           </div>
-          <FranceMap data={fakeData/*state.data_results*/} />
+          <FranceMap data={/*fakeData*/state.data_results} />
           <div className='results-panel__buttons'>
             <button
               className='results-panel__primary-button'
