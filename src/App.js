@@ -64,7 +64,6 @@ export default class App extends Component {
    * * * * * * * * * * * * * * * * */
   componentDidMount () {
     document.addEventListener('keydown', this.listenToKeyStrokes)
-    // this.fetchCredentials()
     if (this.props.spreadsheet) return this.fetchSheet()
     return this.setState({ loading_sheet: false })
   }
@@ -346,7 +345,7 @@ export default class App extends Component {
         <Paragraph literary>
           Limoges, au nord ou au sud&nbsp;? Maubeuge la méridionale ou l'australe&nbsp;?<br /><br />
           Il y a la réalité géographique et puis le ressenti.<br /><br />
-          Nous avons sélectionné dix villes parmi les plus peuplées de France. Placez-les au nord ou au sud selon l'image que vous en avez pour nous permettre de mesurer le décalage entre les faits et votre perception
+          Nous avons sélectionné dix villes parmi les plus peuplées de France. Placez-les au nord ou au sud selon l'image que vous en avez pour mesurer l'éventuel décalage entre les faits et votre perception.
         </Paragraph>
         <button onClick={this.handleActivateGameMode}>
           <Overhead big>Jouer</Overhead>
@@ -392,12 +391,12 @@ export default class App extends Component {
           </div>
           <div className='results-panel__text'>
             <Paragraph literary>
-            {`Votre vote a été ajouté aux ${state.data_votes_cnt} votes précédents pour calculer le taux de Sud ressenti de la France (axe central) : si tous les votants ont placé une ville au Nord, son pourcentage de Sud ressenti est de 0%.`}
+            Votre vote a été ajouté aux {state.data_votes_cnt} votes précédents pour calculer le taux de Sud ressenti de la France (axe de droite) : si tous les votants ont placé une ville au Nord, son pourcentage de Sud ressenti est de 0%.
             <br /><br />
-            {`L’axe de gauche représente la latitude réelle de la ville : plus le lien qui relie une ville à sa latitude réelle est incliné, plus le pourcentage de Sud ressenti diffère de la réalité.`}
+            L’axe de gauche représente la latitude réelle de la ville : plus le lien qui relie une ville à sa latitude réelle est incliné, plus le pourcentage de Sud ressenti diffère de la réalité.
             </Paragraph>
           </div>
-          <Gauge data={/*fakeData*/state.data_results} />
+          <Gauge data={state.data_results} />
           <div className='results-panel__buttons'>
             <button
               className='results-panel__primary-button'
@@ -420,12 +419,12 @@ export default class App extends Component {
           </div>
           <div className='results-panel__text'>
             <Paragraph literary>
-            {`Les cercles sont coloriés par rapport au taux de Sud ressenti présenté précédemment.`}
+            Les cercles sont coloriés par rapport au taux de Sud ressenti présenté précédemment.
             <br /><br />
-            {`Les couleurs du fond de carte correspondent à la latitude réelle des zones coloriées : si un cercle gris est placé dans la zone rose, c’est que les lecteurs l’imaginent au Nord alors qu’il est au Sud, et vice versa.`}
+            Les couleurs du fond de carte correspondent à la latitude réelle des zones coloriées : si un cercle bleu est placé dans la zone jaune, c’est que les lecteurs l’imaginent au Nord alors qu’il est au Sud, et vice versa.
             </Paragraph>
           </div>
-          <FranceMap data={/*fakeData*/state.data_results} />
+          <FranceMap data={state.data_results} />
           <div className='results-panel__buttons'>
             <button
               className='results-panel__primary-button'

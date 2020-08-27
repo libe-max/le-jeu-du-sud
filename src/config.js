@@ -7,7 +7,7 @@ const config = {
     title: 'On dirait le sud',
     url: 'https://www.liberation.fr/apps/2020/09/on-dirait-le-sud/',
     description: 'Nous avons sélectionné dix villes parmi les plus peuplées de France. Placez-les au nord ou au sud selon l\'image que vous en avez pour nous permettre de mesurer le décalage entre les faits et votre perception.',
-    image: '',
+    image: 'https://www.liberation.fr/apps/2020/09/on-dirait-le-sud/social.jpg',
     xiti_id: 'on-dirait-le-sud',
     tweet: '',
   },

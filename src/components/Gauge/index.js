@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Paragraph from 'libe-components/lib/text-levels/Paragraph'
+import JSXInterpreter from 'libe-components/lib/logic/JSXInterpreter'
 import chroma from 'chroma-js'
 
 class Gauge extends Component {
@@ -56,9 +57,11 @@ class Gauge extends Component {
               className='jauge__marker-wrapper'
               style={markerWarpperStyle}>
               <div className={isUpsideDown ? 'jauge__up-difference-marker' : 'jauge__down-difference-marker'} />
-              <div className='jauge__latitude-marker' style={{ top: `${isUpsideDown ? 100 : 0}%` }} />
+              <div className='jauge__latitude-marker' style={{ top: `${isUpsideDown ? 100 : 0}%` }}>
+                <span className='jauge__city-marker jauge__city-marker_left'><Paragraph small><JSXInterpreter content={city.name.replace(/\s/igm, ' ').replace(/-/igm, '&#8209')} /></Paragraph></span>
+              </div>
               <div className='jauge__vote-marker' style={{ top: `${isUpsideDown ? 0 : 100}%`, background: `${color}` }}>
-                <span className='jauge__city-marker'><Paragraph small>{city.name}</Paragraph></span>
+                <span className='jauge__city-marker'><Paragraph small><JSXInterpreter content={city.name.replace(/\s/igm, ' ').replace(/-/igm, '&#8209')} /></Paragraph></span>
               </div>
             </div>
           })
