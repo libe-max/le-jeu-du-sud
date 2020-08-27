@@ -44,7 +44,7 @@ class Gauge extends Component {
         <div className='jauge__markers-wrapper' ref={n => this.$markersWrapper = n}>{
           data.map(city => {
             const latitudeRatio = 100 - (100 * (city.latitude - mapSouthBound) / (mapNorthBound - mapSouthBound))
-            const voteRatio = 100 * city.south / (city.north + city.south)
+            const voteRatio = (100 * city.south / (city.north + city.south)) || 0
             const topValue = Math.min(latitudeRatio, voteRatio)
             const heightValue = Math.abs(latitudeRatio - voteRatio)
             const markerWarpperStyle = { top: `${topValue}%`, height: `${heightValue}%` }

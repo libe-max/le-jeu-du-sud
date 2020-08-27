@@ -13,7 +13,7 @@ class FranceMap extends Component {
       <img alt='Map of France' src='./france-map.svg' />
       <div className='france-map__markers'>{
         data.map(city => {
-          const voteRatio = 100 * city.south / (city.north + city.south)
+          const voteRatio = (100 * city.south / (city.north + city.south)) || 0
           const latitudeRatio = 100 - (100 * (city.latitude - mapSouthBound) / (mapNorthBound - mapSouthBound))
           const latitudeRatioCorrect = latitudeRatio + 2 * Math.pow(Math.sin(Math.PI * latitudeRatio / 100), 2)
           const hPos = 100 * (city.longitude - mapWestBound) / (mapEastBound - mapWestBound)

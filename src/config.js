@@ -5,8 +5,8 @@ const config = {
   meta: {
     author: 'Libé Labo',
     title: 'On dirait le sud',
-    url: '',
-    description: '',
+    url: 'https://www.liberation.fr/apps/2020/09/on-dirait-le-sud/',
+    description: 'Nous avons sélectionné dix villes parmi les plus peuplées de France. Placez-les au nord ou au sud selon l\'image que vous en avez pour nous permettre de mesurer le décalage entre les faits et votre perception.',
     image: '',
     xiti_id: 'on-dirait-le-sud',
     tweet: '',
